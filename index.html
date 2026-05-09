@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Hoard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg: #090910;
+    --surface: #10101a;
+    --surface2: #17172288;
+    --border: #25253388;
+    --accent: #bf5fff;
+    --accent2: #ff6b35;
+    --accent3: #64c8ff;
+    --text: #e8e0f0;
+    --muted: #6b6080;
+    --pill-bg: #18182288;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  header {
+    padding: 14px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+    background: var(--surface);
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.9rem;
+    letter-spacing: 3px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .tagline {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+  .stats-bar {
+    display: flex; gap: 20px;
+    padding: 8px 32px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto; flex-shrink: 0;
+  }
+
+  .stat {
+    display: flex; align-items: center; gap: 7px;
+    white-space: nowrap;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; color: var(--muted);
+  }
+
+  .stat strong { color: var(--accent); }
+
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+    padding: 0 32px; gap: 4px;
+  }
+
+  .tab {
+    padding: 10px 18px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 1px;
+    cursor: pointer; color: var(--muted);
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s; user-select: none;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-badge {
+    background: var(--accent2); color: #000;
+    font-size: 0.52rem; padding: 1px 5px;
+    border-radius: 6px; font-weight: 700;
+  }
+
+  .main { display: flex; flex: 1; overflow: hidden; }
+
+  .sidebar {
+    width: 230px; flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    padding: 18px 14px;
+    overflow-y: auto;
+    display: flex; flex-direction: column; gap: 18px;
+  }
+
+  .sidebar::-webkit-scrollbar { width: 3px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); }
+
+  .sidebar-section h3 {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 2px;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 9px;
+  }
+
+  .chip-group { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .chip {
+    background: var(--pill-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px; padding: 5px 11px;
+    font-size: 0.72rem; cursor: pointer;
+    transition: all 0.15s; color: var(--text); user-select: none;
+  }
+
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 500; }
+
+  .platform-pills { display: flex; flex-direction: column; gap: 5px; }
+
+  .platform-pill {
+    background: var(--pill-bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 11px;
+    font-size: 0.76rem; cursor: pointer;
+    transition: all 0.15s; color: var(--text);
+    display: flex; justify-content: space-between; align-items: center;
+    user-select: none;
+  }
+
+  .platform-pill:hover { border-color: var(--accent); }
+  .platform-pill.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
+
+  .pill-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; color: var(--muted);
+  }
+
+  .search-wrap { position: relative; }
+  .search-wrap input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px 8px 32px;
+    color: var(--text); font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem; outline: none;
+  }
+  .search-wrap input:focus { border-color: var(--accent); }
+  .search-wrap input::placeholder { color: var(--muted); }
+  .search-icon {
+    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    color: var(--muted); font-size: 0.8rem; pointer-events: none;
+  }
+
+  .content {
+    flex: 1; overflow-y: auto;
+    padding: 20px 24px;
+  }
+
+  .content::-webkit-scrollbar { width: 4px; }
+  .content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .results-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .results-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; color: var(--muted);
+  }
+
+  .view-controls { display: flex; gap: 6px; align-items: center; }
+
+  .view-btn {
+    background: var(--pill-bg); border: 1px solid var(--border);
+    border-radius: 6px; padding: 5px 8px;
+    cursor: pointer; color: var(--muted); font-size: 0.75rem;
+    transition: all 0.15s;
+  }
+  .view-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .view-btn.active { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+
+  .sort-select {
+    background: var(--pill-bg); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; padding: 5px 8px;
+    border-radius: 6px; cursor: pointer; outline: none;
+  }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+
+  .card:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+  .card-title {
+    font-size: 0.88rem; font-weight: 500; line-height: 1.3;
+  }
+
+  .card-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem; color: var(--muted);
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  }
+
+  .platform-tag {
+    padding: 2px 7px; border-radius: 4px;
+    font-size: 0.58rem; font-weight: 700;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .platform-Xbox { background: #107c1022; color: #4caf50; border: 1px solid #107c1044; }
+  .platform-PlayStation { background: #00439c22; color: #5b9bd5; border: 1px solid #00439c44; }
+  .platform-Nintendo { background: #e6000022; color: #ff6b6b; border: 1px solid #e6000044; }
+
+  .score-badge {
+    margin-left: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem; font-weight: 700;
+    padding: 2px 6px; border-radius: 4px;
+  }
+
+  .score-great { background: #1a3a1a; color: #6cff6c; border: 1px solid #2a5a2a; }
+  .score-good  { background: #3a3a1a; color: #e8e84c; border: 1px solid #5a5a2a; }
+  .score-mixed { background: #3a2a1a; color: #ffaa44; border: 1px solid #5a4a2a; }
+  .score-none  { background: var(--pill-bg); color: var(--muted); border: 1px solid var(--border); }
+
+  .card-genres {
+    display: flex; flex-wrap: wrap; gap: 5px;
+  }
+
+  .genre-tag {
+    background: var(--pill-bg); border: 1px solid var(--border);
+    border-radius: 4px; padding: 2px 7px;
+    font-size: 0.6rem; color: var(--muted);
+  }
+
+  .status-dot {
+    position: absolute; top: 10px; right: 10px;
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+
+  .status-dot.beat { background: var(--accent); }
+  .status-dot.played { background: var(--accent3); }
+  .status-dot.unplayed { display: none; }
+
+  /* LIST VIEW */
+  .list-view { display: flex; flex-direction: column; gap: 3px; }
+
+  .list-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 1fr 120px 80px 70px 60px;
+    gap: 12px;
+    align-items: center;
+    transition: all 0.12s;
+    font-size: 0.84rem;
+  }
+
+  .list-row:hover { border-color: var(--accent); }
+
+  .list-title { font-weight: 500; }
+  .list-platform { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); }
+  .list-genres { font-size: 0.7rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .list-score { font-family: 'Space Mono', monospace; font-size: 0.72rem; text-align: right; }
+  .list-status { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); text-align: right; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100; padding: 20px;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  }
+
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    width: 100%; max-width: 560px;
+    max-height: 85vh; overflow-y: auto;
+    padding: 28px;
+    transform: translateY(12px); transition: transform 0.2s;
+  }
+
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal::-webkit-scrollbar { width: 3px; }
+  .modal::-webkit-scrollbar-thumb { background: var(--border); }
+
+  .modal-header { margin-bottom: 18px; }
+
+  .modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.7rem; letter-spacing: 2px;
+    color: var(--text); line-height: 1.1; margin-bottom: 8px;
+  }
+
+  .modal-meta {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  }
+
+  .modal-desc {
+    font-size: 0.88rem; color: var(--text);
+    line-height: 1.6; margin-bottom: 18px;
+    opacity: 0.85;
+  }
+
+  .modal-section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 2px;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 8px; margin-top: 16px;
+  }
+
+  .modal-genres { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .modal-genre-tag {
+    background: var(--pill-bg); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 0.72rem; color: var(--text);
+    cursor: pointer; transition: all 0.15s;
+  }
+
+  .modal-genre-tag:hover { border-color: var(--accent); color: var(--accent); }
+
+  .riyl-list { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .riyl-tag {
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 0.72rem; color: var(--accent);
+  }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
+
+  .btn {
+    padding: 9px 20px; border-radius: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 1px;
+    cursor: pointer; border: 1px solid var(--border);
+    transition: all 0.15s; background: var(--pill-bg); color: var(--text);
+  }
+
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
+  .btn.primary:hover { opacity: 0.85; }
+  .btn.active-status { border-color: var(--accent3); color: var(--accent3); }
+
+  .modal-close {
+    position: absolute; top: 16px; right: 18px;
+    background: none; border: none;
+    color: var(--muted); font-size: 1.2rem;
+    cursor: pointer; padding: 4px 8px;
+    border-radius: 6px; transition: color 0.15s;
+  }
+
+  .modal-close:hover { color: var(--text); }
+
+  .modal { position: relative; }
+
+  .mc-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; color: var(--muted);
+    text-decoration: none;
+  }
+
+  .mc-link:hover { color: var(--accent); }
+
+  .empty-state {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 12px;
+    padding: 60px 0; color: var(--muted);
+    font-family: 'Space Mono', monospace; font-size: 0.75rem;
+    text-align: center;
+  }
+
+  .empty-state .big { font-size: 2.5rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>THE HOARD</h1>
+    <div class="tagline">121 GAMES &nbsp;·&nbsp; 3 PLATFORMS</div>
+  </div>
+  <div class="header-right">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="searchInput" placeholder="Search games..." autocomplete="off">
+    </div>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat"><span>TOTAL</span><strong id="statTotal">121</strong></div>
+  <div class="stat"><span>PLAYED</span><strong id="statPlayed">0</strong></div>
+  <div class="stat"><span>BEAT</span><strong id="statBeat">0</strong></div>
+  <div class="stat"><span>BACKLOG</span><strong id="statBacklog">0</strong></div>
+  <div class="stat"><span>SHOWING</span><strong id="statShowing">0</strong></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-status="all">ALL</div>
+  <div class="tab" data-status="beat">BEAT</div>
+  <div class="tab" data-status="played">PLAYING</div>
+  <div class="tab" data-status="unplayed">BACKLOG</div>
+</div>
+
+<div class="main">
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <h3>Platform</h3>
+      <div class="platform-pills" id="platformPills"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Source</h3>
+      <div class="chip-group" id="sourceChips"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Genre</h3>
+      <div class="chip-group" id="genreChips"></div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="results-header">
+      <div class="results-count" id="resultsCount"></div>
+      <div class="view-controls">
+        <select class="sort-select" id="sortSelect">
+          <option value="default">DEFAULT</option>
+          <option value="title">TITLE A–Z</option>
+          <option value="score-desc">SCORE ↓</option>
+          <option value="score-asc">SCORE ↑</option>
+        </select>
+        <button class="view-btn active" id="btnGrid" title="Grid">⊞</button>
+        <button class="view-btn" id="btnList" title="List">☰</button>
+      </div>
+    </div>
+    <div id="gameGrid"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-meta" id="modalMeta"></div>
+    </div>
+    <div class="modal-desc" id="modalDesc"></div>
+    <div id="modalGenresSection">
+      <div class="modal-section-label">Genres</div>
+      <div class="modal-genres" id="modalGenres"></div>
+    </div>
+    <div id="modalRiylSection">
+      <div class="modal-section-label">If you like this, try</div>
+      <div class="riyl-list" id="modalRiyl"></div>
+    </div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<script src="library.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
