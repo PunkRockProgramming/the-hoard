@@ -46,6 +46,20 @@ function updateClearBtn() {
   document.getElementById('clearFilters').style.display = active ? '' : 'none';
 }
 
+function pickRandom() {
+  const backlog = filtered().filter(g => getStatus(g) === 'unplayed');
+  if (!backlog.length) {
+    const backlogTab = [...document.querySelectorAll('.tab')].find(t => t.dataset.status === 'unplayed');
+    if (backlogTab) {
+      backlogTab.classList.add('flash');
+      setTimeout(() => backlogTab.classList.remove('flash'), 600);
+    }
+    return;
+  }
+  const game = backlog[Math.floor(Math.random() * backlog.length)];
+  openModal(game);
+}
+
 function getStatus(game) {
   const override = STATUS[game.title];
   if (override) return override;
@@ -394,6 +408,7 @@ function init() {
   });
 
   document.getElementById('clearFilters').addEventListener('click', clearFilters);
+  document.getElementById('btnPick').addEventListener('click', pickRandom);
 }
 
 init();

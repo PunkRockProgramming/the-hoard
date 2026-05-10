@@ -97,6 +97,11 @@
 
   .tab:hover { color: var(--text); }
   .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab.flash { animation: tab-flash 0.6s ease; }
+  @keyframes tab-flash {
+    0%, 100% { color: var(--muted); border-bottom-color: transparent; }
+    50% { color: var(--accent2); border-bottom-color: var(--accent2); }
+  }
 
   .tab-badge {
     background: var(--accent2); color: #000;
@@ -522,6 +527,7 @@
       <div class="results-count" id="resultsCount"></div>
       <button class="clear-btn" id="clearFilters" style="display:none">✕ CLEAR</button>
       <div class="view-controls">
+        <button class="view-btn" id="btnPick" title="Surprise Me">🎲 PICK</button>
         <select class="sort-select" id="sortSelect">
           <option value="default">DEFAULT</option>
           <option value="title">TITLE A–Z</option>
