@@ -220,6 +220,19 @@ function openModal(game) {
 
   renderModalActions(status);
 
+  const noteText = (META[game.title] || {}).note || '';
+  document.getElementById('modalNotes').value = noteText;
+  document.getElementById('notesSaved').classList.remove('show');
+
+  document.getElementById('btnSaveNote').onclick = () => {
+    if (!META[openGame.title]) META[openGame.title] = {};
+    META[openGame.title].note = document.getElementById('modalNotes').value;
+    saveHoardMeta();
+    const saved = document.getElementById('notesSaved');
+    saved.classList.add('show');
+    setTimeout(() => saved.classList.remove('show'), 2000);
+  };
+
   const overlay = document.getElementById('modalOverlay');
   overlay.classList.add('open');
 }

@@ -400,6 +400,39 @@
 
   .modal-close:hover { color: var(--text); }
 
+  .modal-notes-section { margin-top: 22px; }
+
+  .notes-textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    resize: vertical;
+    outline: none;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .notes-textarea:focus { border-color: var(--accent); }
+  .notes-textarea::placeholder { color: var(--muted); }
+
+  .notes-save-row { display: flex; align-items: center; gap: 10px; }
+
+  .notes-saved {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .notes-saved.show { opacity: 1; }
+
   .modal { position: relative; }
 
   .mc-link {
@@ -504,6 +537,14 @@
       <div class="riyl-list" id="modalRiyl"></div>
     </div>
     <div class="modal-actions" id="modalActions"></div>
+    <div class="modal-notes-section">
+      <div class="modal-section-label">Notes</div>
+      <textarea class="notes-textarea" id="modalNotes" rows="4" placeholder="Personal notes..."></textarea>
+      <div class="notes-save-row">
+        <button class="btn" id="btnSaveNote">SAVE</button>
+        <span class="notes-saved" id="notesSaved">✓ Saved</span>
+      </div>
+    </div>
   </div>
 </div>
 
