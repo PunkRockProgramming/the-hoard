@@ -29,6 +29,23 @@ function saveHoardMeta() {
   localStorage.setItem('hoard_meta', JSON.stringify(META));
 }
 
+function clearFilters() {
+  activePlatforms.clear();
+  activeSources.clear();
+  activeGenres.clear();
+  searchQuery = '';
+  sortMode = 'default';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('sortSelect').value = 'default';
+  renderSidebar();
+  render();
+}
+
+function updateClearBtn() {
+  const active = activePlatforms.size > 0 || activeSources.size > 0 || activeGenres.size > 0 || searchQuery !== '';
+  document.getElementById('clearFilters').style.display = active ? '' : 'none';
+}
+
 function getStatus(game) {
   const override = STATUS[game.title];
   if (override) return override;
@@ -169,6 +186,7 @@ function render() {
       if (game) openModal(game);
     });
   });
+  updateClearBtn();
 }
 
 // ============================================================
@@ -374,6 +392,8 @@ function init() {
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeModal();
   });
+
+  document.getElementById('clearFilters').addEventListener('click', clearFilters);
 }
 
 init();

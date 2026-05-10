@@ -190,6 +190,21 @@
     font-size: 0.65rem; color: var(--muted);
   }
 
+  .clear-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.15s;
+  }
+
+  .clear-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+
   .view-controls { display: flex; gap: 6px; align-items: center; }
 
   .view-btn {
@@ -505,6 +520,7 @@
   <div class="content">
     <div class="results-header">
       <div class="results-count" id="resultsCount"></div>
+      <button class="clear-btn" id="clearFilters" style="display:none">✕ CLEAR</button>
       <div class="view-controls">
         <select class="sort-select" id="sortSelect">
           <option value="default">DEFAULT</option>
