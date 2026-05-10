@@ -244,8 +244,17 @@ function openModal(game) {
   if (game.riyl?.length) {
     riylSection.style.display = '';
     document.getElementById('modalRiyl').innerHTML = game.riyl.map(r =>
-      `<span class="riyl-tag">${r}</span>`
+      `<span class="riyl-tag" data-riyl="${encodeURIComponent(r)}">${r}</span>`
     ).join('');
+    document.getElementById('modalRiyl').querySelectorAll('.riyl-tag').forEach(el => {
+      el.addEventListener('click', () => {
+        const q = decodeURIComponent(el.dataset.riyl);
+        closeModal();
+        searchQuery = q;
+        document.getElementById('searchInput').value = q;
+        render();
+      });
+    });
   } else {
     riylSection.style.display = 'none';
   }
