@@ -152,6 +152,8 @@ function render() {
   document.getElementById('statShowing').textContent = list.length;
   document.getElementById('resultsCount').textContent = `${list.length} of ${GAMES.length} games`;
 
+  updateClearBtn();
+
   const grid = document.getElementById('gameGrid');
 
   if (!list.length) {
@@ -200,7 +202,6 @@ function render() {
       if (game) openModal(game);
     });
   });
-  updateClearBtn();
 }
 
 // ============================================================
