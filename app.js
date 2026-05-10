@@ -9,6 +9,7 @@ let viewMode = 'grid';
 let sortMode = 'default';
 let searchQuery = '';
 let STATUS = {};
+let META = {};
 let openGame = null;
 
 // ============================================================
@@ -16,11 +17,16 @@ let openGame = null;
 // ============================================================
 function loadPersisted() {
   try { STATUS = JSON.parse(localStorage.getItem('hoard_status') || '{}'); } catch(e) { STATUS = {}; }
+  try { META = JSON.parse(localStorage.getItem('hoard_meta') || '{}'); } catch(e) { META = {}; }
 }
 
 function saveStatus() {
   localStorage.setItem('hoard_status', JSON.stringify(STATUS));
   updateStatBar();
+}
+
+function saveHoardMeta() {
+  localStorage.setItem('hoard_meta', JSON.stringify(META));
 }
 
 function getStatus(game) {
