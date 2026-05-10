@@ -42,7 +42,16 @@ function getStatus(game) {
 // ============================================================
 const PLATFORMS = [...new Set(GAMES.map(g => g.console_family))].sort();
 const SOURCES = [...new Set(GAMES.map(g => g.source))].sort();
-const GENRES = [...new Set(GAMES.flatMap(g => g.genres))].sort();
+
+function buildTopGenres(n = 16) {
+  const counts = {};
+  GAMES.forEach(g => g.genres.forEach(gen => { counts[gen] = (counts[gen] || 0) + 1; }));
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, n)
+    .map(([gen]) => gen);
+}
+const TOP_GENRES = buildTopGenres();
 
 const PLATFORM_COUNTS = {};
 PLATFORMS.forEach(p => { PLATFORM_COUNTS[p] = GAMES.filter(g => g.console_family === p).length; });
@@ -287,7 +296,7 @@ function renderSidebar() {
 
   // Genres
   const genreChips = document.getElementById('genreChips');
-  genreChips.innerHTML = GENRES.map(gen => `
+  genreChips.innerHTML = TOP_GENRES.map(gen => `
     <div class="chip ${activeGenres.has(gen) ? 'active' : ''}" data-genre="${gen}">${gen}</div>
   `).join('');
   genreChips.querySelectorAll('.chip').forEach(el => {
