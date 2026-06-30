@@ -165,9 +165,13 @@ function render() {
     grid.className = 'grid';
     grid.innerHTML = list.map(g => {
       const status = getStatus(g);
+      const imgHtml = g.image
+        ? `<img class="card-img" src="${g.image}" alt="" loading="lazy">`
+        : `<div class="card-img card-img-placeholder"></div>`;
       return `
         <div class="card" data-title="${encodeURIComponent(g.title)}">
           <div class="status-dot ${status}"></div>
+          ${imgHtml}
           <div class="card-title">${g.title}</div>
           <div class="card-meta">
             <span class="platform-tag platform-${g.console_family}">${g.console_family}</span>
@@ -184,8 +188,12 @@ function render() {
     grid.innerHTML = list.map(g => {
       const status = getStatus(g);
       const statusLabel = status === 'beat' ? '✓ BEAT' : status === 'played' ? '▷ PLAYING' : '—';
+      const thumbHtml = g.image
+        ? `<img class="list-thumb" src="${g.image}" alt="" loading="lazy">`
+        : `<div class="list-thumb list-thumb-placeholder"></div>`;
       return `
         <div class="list-row" data-title="${encodeURIComponent(g.title)}">
+          ${thumbHtml}
           <div class="list-title">${g.title}</div>
           <div class="list-platform platform-tag platform-${g.console_family}">${g.console_family}</div>
           <div class="list-genres">${g.genres.slice(0, 2).join(', ')}</div>
@@ -210,6 +218,14 @@ function render() {
 function openModal(game) {
   openGame = game;
   const status = getStatus(game);
+
+  const banner = document.getElementById('modalBanner');
+  if (game.image) {
+    banner.style.backgroundImage = `url(${game.image})`;
+    banner.style.display = '';
+  } else {
+    banner.style.display = 'none';
+  }
 
   document.getElementById('modalTitle').textContent = game.title;
 
